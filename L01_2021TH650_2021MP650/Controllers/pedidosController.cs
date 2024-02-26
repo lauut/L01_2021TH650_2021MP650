@@ -57,7 +57,7 @@ namespace L01_2021TH650_2021MP650.Controllers
         }
         [HttpPost]
         [Route("AddPedido")]
-        public IActionResult GuardarEquipo([FromBody] pedidos pedido)
+        public IActionResult Guardarpedido([FromBody] pedidos pedido)
         {
             try
             {
