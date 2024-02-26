@@ -45,13 +45,76 @@ namespace L01_2021TH650_2021MP650.Controllers
         }
         [HttpPost]
         [Route("AddMotoristas")]
-        public IActionResult GuardarMotoristas([FromBody] pedidos pedido)
+        public IActionResult GuardarMotoristas([FromBody] motoristas motorista)
         {
             try
             {
-                _restauranteContext.pedidos.Add(pedido);
+                _restauranteContext.motoristas.Add(motorista);
                 _restauranteContext.SaveChanges();
                 return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpPut]
+        [Route("Actualizarmotoristas/{id}")]
+
+        public IActionResult ActualizarMotoristas(int id, [FromBody] motoristas motoristasModificar)
+        {
+            try
+            {
+
+                motoristas? motoristaActual = (from m in _restauranteContext.motoristas
+                                         where m.motoristaId == id
+                                         select m).FirstOrDefault();
+
+
+                if (motoristaActual == null)
+                {
+                    return NotFound();
+                }
+
+
+
+                motoristaActual.nombreMotorista = motoristasModificar.nombreMotorista;
+
+                _restauranteContext.Entry(motoristaActual).State = EntityState.Modified;
+                _restauranteContext.SaveChanges();
+
+                return Ok(motoristasModificar);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+
+            }
+        }
+        [HttpDelete]
+        [Route("EliminarMotorista/{id}")]
+
+        public IActionResult Eliminarmotorista(int id)
+        {
+            try
+            {
+
+                motoristas? motorista = (from p in _restauranteContext.motoristas
+                                   where p.motoristaId == id
+                                   select p).FirstOrDefault();
+
+                
+                if (motorista == null)
+                {
+                    return NotFound();
+                }
+
+                
+                _restauranteContext.motoristas.Attach(motorista);
+                _restauranteContext.motoristas.Remove(motorista);
+                _restauranteContext.SaveChanges();
+
+                return Ok(motorista);
             }
             catch (Exception ex)
             {
