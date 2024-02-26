@@ -28,5 +28,54 @@ namespace L01_2021TH650_2021MP650.Controllers
             return Ok(listadoplatos);
 
         }
+        [HttpPost]
+        [Route("AddPlatos")]
+        public IActionResult GuardarPlatos([FromBody] platos plato)
+        {
+            try
+            {
+                _restauranteContext.platos.Add(plato);
+                _restauranteContext.SaveChanges();
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpPut]
+        [Route("ActualizarPlatos/{id}")]
+
+        public IActionResult ActualizarMotoristas(int id, [FromBody] platos platosModificar)
+        {
+            try
+            {
+
+                platos? platoActual = (from m in _restauranteContext.platos
+                                               where m.platoId == id
+                                               select m).FirstOrDefault();
+
+
+                if (platoActual == null)
+                {
+                    return NotFound();
+                }
+
+
+
+                platoActual.nombrePlato = platosModificar.nombrePlato;
+                platoActual.precio = platosModificar.precio;
+
+                _restauranteContext.Entry(platoActual).State = EntityState.Modified;
+                _restauranteContext.SaveChanges();
+
+                return Ok(platosModificar);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+
+            }
+        }
     }
 }
