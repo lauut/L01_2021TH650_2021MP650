@@ -28,6 +28,21 @@ namespace L01_2021TH650_2021MP650.Controllers
             return Ok(listadoplatos);
 
         }
+        [HttpGet]
+        [Route("FindPlatoPrecio/{filtro}")]
+        public IActionResult FindByPrecio(decimal filtro)
+        {
+            platos? plato = (from pl in _restauranteContext.platos
+                             where pl.precio < filtro
+                             select pl).FirstOrDefault();
+
+            if (plato == null)
+            {
+                return NotFound();
+            }
+            return Ok(plato);
+        }
+
         [HttpPost]
         [Route("AddPlatos")]
         public IActionResult GuardarPlatos([FromBody] platos plato)
